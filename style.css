@@ -1,0 +1,506 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #000;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+}
+
+.game-container {
+    width: 100%;
+    height: 100%;
+    max-width: 800px;
+    margin: auto;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: auto;
+}
+
+canvas {
+    width: 100%;
+    height: auto;
+    touch-action: none;
+    border: 2px solid #fff;
+    background-color: #000;
+}
+
+.game-info {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    font-size: 20px;
+    transform: none;
+    z-index: 5;
+}
+
+.game-over, .mobile-controls {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.game-over {
+    z-index: 10;
+}
+
+.score, .level {
+    margin: 5px 0;
+}
+
+.game-over {
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    border: 2px solid #fff;
+}
+
+.game-over h1 {
+    color: #ff0000;
+    margin-bottom: 20px;
+}
+
+.game-over button {
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.game-over button:hover {
+    background-color: #cc0000;
+}
+
+.hp-bar {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 120px;
+}
+
+.hp-fill {
+    width: 100px;
+    height: 15px;
+    background-color: #333;
+    border: 1px solid #fff;
+    position: relative;
+    --hp-percent: 100%;
+}
+
+.hp-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: var(--hp-percent);
+    background-color: #00ff00;
+    transition: width 0.3s;
+}
+
+#hpText {
+    margin-left: 5px;
+}
+
+/* Mobile controls positioning */
+.mobile-controls {
+    position: fixed;
+    bottom: 30px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    z-index: 100;
+}
+
+.control-button {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    color: white;
+    touch-action: manipulation;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    user-select: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+}
+
+/* Layout for control buttons */
+#leftButton {
+    order: 1;
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+}
+
+#shootButton {
+    order: 2;
+    width: 80px;
+    height: 80px;
+    font-size: 18px;
+    background: rgba(255, 0, 0, 0.2);
+    border-color: rgba(255, 0, 0, 0.5);
+}
+
+#rightButton {
+    order: 3;
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+}
+
+/* Mode Portrait untuk Mobile */
+@media (orientation: portrait) {
+    .game-container {
+        aspect-ratio: 9/16;
+        margin-bottom: 200px; /* Memberikan ruang lebih banyak untuk controls */
+    }
+
+    canvas {
+        max-height: 70vh; /* Membatasi tinggi canvas */
+    }
+
+    .mobile-controls {
+        bottom: 40px;
+    }
+
+    .control-button.shoot {
+        bottom: 140%; /* Posisi shoot button lebih tinggi di mode portrait */
+        right: 5%;
+    }
+}
+
+/* Mode Landscape */
+@media (orientation: landscape) {
+    .game-container {
+        aspect-ratio: 16/9;
+        margin-bottom: 80px;
+    }
+
+    .mobile-controls {
+        bottom: 20px;
+    }
+
+    .control-button {
+        width: 50px;
+        height: 50px;
+    }
+
+    .control-button.shoot {
+        width: 50px;
+        height: 50px;
+        bottom: 100%;
+    }
+
+    #shootButton {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .control-button {
+        width: 55px;
+        height: 55px;
+    }
+
+    .control-button.shoot {
+        width: 65px;
+        height: 65px;
+    }
+}
+
+/* Mobile kecil */
+@media (max-width: 320px) {
+    .control-button {
+        width: 45px;
+        height: 45px;
+    }
+
+    .control-button.shoot {
+        width: 55px;
+        height: 55px;
+    }
+
+    .mobile-controls {
+        gap: 15px;
+    }
+
+    .control-button {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+
+    #shootButton {
+        width: 65px;
+        height: 65px;
+        font-size: 16px;
+    }
+}
+
+/* Responsive design */
+@media (min-width: 768px) {
+    .game-container {
+        aspect-ratio: 4/3;
+    }
+    
+    .mobile-controls {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .game-container {
+        margin-bottom: 110px;
+    }
+
+    .mobile-controls {
+        bottom: -85px;
+        gap: 30px;
+    }
+
+    .game-info {
+        font-size: 14px;
+        padding: 3px;
+    }
+
+    .hp-fill {
+        width: 60px;
+        height: 12px;
+    }
+
+    .score, .level {
+        margin: 3px 5px;
+    }
+
+    body {
+        padding: 0;
+        margin: 0;
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
+    }
+}
+
+@media (max-height: 600px) {
+    .game-container {
+        aspect-ratio: 16/9;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .game-info {
+        font-size: 16px;
+    }
+
+    .hp-fill {
+        width: 80px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .game-container {
+        margin-bottom: 120px;
+    }
+
+    .mobile-controls {
+        display: flex;
+        bottom: -90px;
+    }
+
+    .control-button {
+        width: 45px;
+        height: 45px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+    .game-container {
+        margin-bottom: 60px;
+    }
+
+    .mobile-controls {
+        bottom: -50px;
+        gap: 25px;
+    }
+
+    .control-button {
+        width: 35px;
+        height: 35px;
+        font-size: 11px;
+    }
+}
+
+@media (orientation: portrait) {
+    .game-container {
+        margin-bottom: 130px;
+    }
+
+    .mobile-controls {
+        bottom: -110px;
+    }
+}
+
+@media (min-width: 1025px) {
+    .mobile-controls {
+        display: none;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+    .game-info {
+        font-size: 12px;
+    }
+    
+    .hp-fill {
+        width: 50px;
+        height: 10px;
+    }
+    
+    #hpText {
+        font-size: 10px;
+    }
+    
+    .control-button {
+        width: 55px;
+        height: 55px;
+        font-size: 16px;
+    }
+    
+    .control-button.shoot {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+/* iPhone X and newer */
+@media only screen 
+    and (min-device-width: 375px) 
+    and (max-device-width: 812px) 
+    and (-webkit-min-device-pixel-ratio: 3) {
+    .game-container {
+        margin-bottom: 140px;
+    }
+    
+    .mobile-controls {
+        bottom: -115px;
+    }
+}
+
+/* Small height devices */
+@media (max-height: 500px) {
+    .game-container {
+        height: 80vh;
+    }
+    
+    .mobile-controls {
+        bottom: -40px;
+    }
+    
+    .control-button {
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+    }
+    
+    .control-button.shoot {
+        width: 50px;
+        height: 50px;
+        bottom: 110%;
+    }
+}
+
+/* Ensure content fits on ultra-small screens */
+@media (max-width: 320px) and (max-height: 480px) {
+    .game-container {
+        height: 70vh;
+        margin-bottom: 100px;
+    }
+    
+    .mobile-controls {
+        bottom: -35px;
+    }
+    
+    .control-button {
+        width: 35px;
+        height: 35px;
+        font-size: 12px;
+    }
+    
+    .control-button.shoot {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+/* Ensure safe area for notched devices */
+@supports (padding: max(0px)) {
+    .mobile-controls {
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+    }
+}
+
+html {
+    height: -webkit-fill-available;
+    overflow: hidden;
+}
+
+#loadingScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    z-index: 1000;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
